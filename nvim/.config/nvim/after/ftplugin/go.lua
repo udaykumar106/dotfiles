@@ -46,12 +46,14 @@ nvim_lsp.gopls.setup{
   on_attach = on_attach,
   cmd = {"gopls"},
   settings = {
-    analyses = {
-      unusedparams = true,
+    gopls = {
+      analyses = {
+        unusedparams = true,
+      },
+      staticcheck = true,
+      usePlaceholders = true,
+      gofumpt = true,
     },
-    staticcheck = true,
-    usePlaceholders = true,
-    gofumpt = true,
   },
   capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 }
