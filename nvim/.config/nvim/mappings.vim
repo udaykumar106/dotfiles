@@ -17,8 +17,8 @@ map =J :%!jq -S .<CR>
 map =y :%!yq eval 'sortKeys(..)' %<CR>
 map <leader>o :SymbolsOutline<CR>
 
-:lua vim.o.completeopt = 'menu,noselect,preview'
-autocmd BufWritePre *.go lua gofmt(1000)
+":lua vim.o.completeopt = 'menu,noselect,preview'
+:lua vim.o.completeopt = "menuone,noselect,preview"
 
 
 " these "Ctrl mappings" work well when Caps Lock is mapped to Ctrl
@@ -31,6 +31,6 @@ nmap <silent> t<C-g> :TestVisit<CR>
 
 "set foldmethod=expr
 "set foldexpr=nvim_treesitter#foldexpr()
+"
 
-
-
+au BufWinEnter *.go bufdo :e

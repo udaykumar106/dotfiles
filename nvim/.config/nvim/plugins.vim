@@ -32,6 +32,8 @@ Plug 'vim-test/vim-test'
 
 Plug 'golang/vscode-go'
 
+Plug 'dbeniamine/cheat.sh-vim'
+
 call plug#end()
 
 
