@@ -12,6 +12,8 @@ nnoremap <S-up> :m .-2<CR>==
 vnoremap <S-down> :m '>+1<CR>gv=gv
 vnoremap <S-up> :m '<-2<CR>gv=gv
 
+
+nnoremap <C-f> :Rg<CR>
 map =j :%!jq .<CR>
 map =J :%!jq -S .<CR>
 map =y :%!yq eval 'sortKeys(..)' %<CR>
@@ -33,4 +35,5 @@ nmap <silent> t<C-g> :TestVisit<CR>
 "set foldexpr=nvim_treesitter#foldexpr()
 "
 
-au BufWinEnter *.go bufdo :e
+
+let g:python3_host_prog="/usr/local/bin/python3"
