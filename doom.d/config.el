@@ -23,8 +23,13 @@
 ;;
 ;;(setq doom-font (font-spec :family "Fira Code" :size 12 :weight 'semi-light)
 ;;      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
-(setq doom-font (font-spec :family "Inconsolata" :size 13))
+(setq doom-font (font-spec :family "Inconsolata" :size 14))
+
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 ;;
+(setq company-idle-delay 0.2
+      company-minimum-prefix-length 2)
 ;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
 ;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
 ;; refresh your font settings. If Emacs still can't find your font, it likely
@@ -33,7 +38,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+(setq doom-theme 'doom-tomorrow-night)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -79,9 +84,65 @@
 
 ;; Tell org to look for agenda files that end with .org suffix
 ;; recursively under the folder
-(after! org
-      (setq org-agenda-files (directory-files-recursively "~/Dropbox/org/" "\.org$")))
+;;(after! org
+;;      (setq org-agenda-files (directory-files-recursively "~/Dropbox/org/" "\.org$")
+;;      org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "BLOCKED(b)" "DOING(i)" "|" "DONE(d)" "CANCELLED(c)"))
+;;      org-log-done-with-time t
+;;      org-log-done 'note
+;;      org-hide-emphasis-markers t
+;;      ))
 
+
+
+(after! org
+  (setq org-agenda-files (directory-files-recursively "~/Dropbox/org/" "\.org$")
+        org-todo-keywords
+        '((sequence "TODO" "WAITING" "DOING" "|" "DONE" "CANCELLED"))
+        org-log-done 'time
+        org-log-done 'note))
+
+(use-package! org-super-agenda
+  :after org-agenda
+  :config
+  (org-super-agenda-mode)
+  (setq org-agenda-time-grid '((daily today require-timed) (0000 2400) "..........." "----------------------" )
+        org-agenda-skip-scheduled-if-done t
+        org-agenda-skip-deadline-if-done t
+        org-agenda-include-deadlines t
+        org-agenda-compact-blocks t
+        org-agenda-start-with-log-mode t
+        org-agenda-start-day nil
+        org-agenda-custom-commands
+        '(("z" "Super view"
+           ((agenda "" ((org-agenda-span 'day)
+                        (org-super-agenda-groups
+                         '((:name "Today"
+                            :time-grid t
+                            :date today
+                            :order 1)))))
+            (alltodo "" ((org-agenda-overriding-header "")
+                         (org-super-agenda-groups
+                          '((:name "Important"
+                             :tag "Important"
+                             :priority "A"
+                             :order 3)
+                            (:name "Due Today"
+                             :scheduled today
+                             :deadline today
+                             :order 2)
+                            (:name "Due Soon"
+                             :deadline future
+                             :order 5)
+                            (:name "Overdue"
+                             :deadline past
+                             :order 4))))))))))
+
+
+
+
+
+(after! org-roam
+  (setq org-roam-directory "~/Dropbox/org/roam/"))
 
 ;; Define org capture templates
 ;; These are copied from https://github.com/james-stoup/emacs-org-mode-tutorial#readme
@@ -113,77 +174,6 @@
             )
   )
 
-;; Org super agend view produces a nice agenda view
-(use-package! org-super-agenda
-  :after org-agenda
-  :config
-(setq
-      org-agenda-time-grid '((daily today require-timed) "----------------------" nil)
-      org-agenda-skip-scheduled-if-done t
-      org-agenda-skip-deadline-if-done t
-      org-agenda-include-deadlines t
-      org-agenda-include-diary t
-      org-agenda-block-separator nil
-      org-agenda-compact-blocks t
-      org-agenda-start-with-log-mode t)
-
-(setq org-agenda-custom-commands
-      '(("z" "Super zaen view"
-         ((agenda "" ((org-agenda-span 'day)
-                      (org-super-agenda-groups
-                       '((:name "Today"
-                                :time-grid t
-                                :date today
-                                :todo "TODAY"
-                                :scheduled today
-                                :order 1)))))
-          (alltodo "" ((org-agenda-overriding-header "")
-                       (org-super-agenda-groups
-                        '((:name "Next to do"
-                                 :todo "NEXT"
-                                 :order 1)
-                          (:name "Important"
-                                 :tag "Important"
-                                 :priority "A"
-                                 :order 6)
-                          (:name "Due Today"
-                                 :deadline today
-                                 :order 2)
-                          (:name "Due Soon"
-                                 :deadline future
-                                 :order 8)
-                          (:name "Overdue"
-                                 :deadline past
-                                 :order 7)
-                          (:name "Assignments"
-                                 :tag "Assignment"
-                                 :order 10)
-                          (:name "Issues"
-                                 :tag "Issue"
-                                 :order 12)
-                          (:name "Projects"
-                                 :tag "Project"
-                                 :order 14)
-                          (:name "Emacs"
-                                 :tag "Emacs"
-                                 :order 13)
-                          (:name "Research"
-                                 :tag "Research"
-                                 :order 15)
-                          (:name "To read"
-                                 :tag "Read"
-                                 :order 30)
-                          (:name "Waiting"
-                                 :todo "WAITING"
-                                 :order 20)
-                          (:name "trivial"
-                                 :priority<= "C"
-                                 :tag ("Trivial" "Unimportant")
-                                 :todo ("SOMEDAY" )
-                                 :order 90)
-                          (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
-
-  (org-super-agenda-mode))
 
 
 ;; Configuration for org-roam-ui
@@ -201,3 +191,9 @@
           org-roam-ui-follow t
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
+
+
+(use-package! lsp-java
+  :config
+  (setq lsp-java-vmargs
+        '("-javaagent:/Users/uday/.m2/repository/org/projectlombok/lombok/1.18.16/lombok-1.18.16.jar")))
