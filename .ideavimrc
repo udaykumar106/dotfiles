@@ -1,0 +1,15 @@
+map <space> Mnop>
+set mapleader=' '
+
+set rnu
+set nu
+
+nnoremap gd :action GotoDeclaration<CR>
+nnoremap gu :action ShowUsages<CR>
+nnoremap gi :action GotoImplementation<CR>
+nnoremap gt :action GotoTest<CR>
+nnoremap [e :action GotoNextError<CR>
+nnoremap ]e :action GotoPreviousError<CR>
+
+nnoremap <leader>R :action RefactoringMenu<CR>
+nnoremap <leader>F :action spotlessApply<CR> :write<CR>
